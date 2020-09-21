@@ -298,22 +298,22 @@ int howManyBits(int x) {
 	x = x << bits1;
 
 	int check2 = (x << 8) >> 8;
-	int bits2 = !(check1 ^ x) << 3;
+	int bits2 = !(check2 ^ x) << 3;
 
 	x = x << bits2;
 
 	int check3 = (x << 4) >> 4;
-	int bits3 = !(check1 ^ x) << 2;
+	int bits3 = !(check3 ^ x) << 2;
 
 	x = x << bits3;
 
 	int check4 = (x << 2) >> 2;
-	int bits4 = !(check1 ^ x) << 1;
+	int bits4 = !(check4 ^ x) << 1;
 
 	x = x << bits4;
 
 	int check5 = (x << 1) >> 1;
-	int bits5 = !(check1 ^ x);
+	int bits5 = !(check5 ^ x);
 
 	return 32 + ~(bits1 + bits2 + bits3 + bits4 + bits5) + 1;
 }
