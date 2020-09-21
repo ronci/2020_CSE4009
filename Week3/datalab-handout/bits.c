@@ -277,7 +277,7 @@ int isLessOrEqual(int x, int y) {
  *   Rating: 4 
  */
 int logicalNeg(int x) {
-  return ((x ^ (~x + 1)) >> 31) & 1 ^ 1;
+  return (((x ^ (~x + 1)) >> 31) & 1) ^ 1;
 }
 /* howManyBits - return the minimum number of bits required to represent x in
  *             two's complement
@@ -292,28 +292,30 @@ int logicalNeg(int x) {
  *  Rating: 4
  */
 int howManyBits(int x) {
-	int check1 = (x << 16) >> 16;
-	int bits1 = !(check1 ^ x) << 4;
+	int check1, check2, check3, check4, check5;
+	int bits1, bits2, bits3, bits4, bits5;
+	check1 = (x << 16) >> 16;
+	bits1 = !(check1 ^ x) << 4;
 
 	x = x << bits1;
 
-	int check2 = (x << 8) >> 8;
-	int bits2 = !(check2 ^ x) << 3;
+	check2 = (x << 8) >> 8;
+	bits2 = !(check2 ^ x) << 3;
 
 	x = x << bits2;
 
-	int check3 = (x << 4) >> 4;
-	int bits3 = !(check3 ^ x) << 2;
+	check3 = (x << 4) >> 4;
+	bits3 = !(check3 ^ x) << 2;
 
 	x = x << bits3;
 
-	int check4 = (x << 2) >> 2;
-	int bits4 = !(check4 ^ x) << 1;
+	check4 = (x << 2) >> 2;
+	bits4 = !(check4 ^ x) << 1;
 
 	x = x << bits4;
 
-	int check5 = (x << 1) >> 1;
-	int bits5 = !(check5 ^ x);
+	check5 = (x << 1) >> 1;
+	bits5 = !(check5 ^ x);
 
 	return 32 + ~(bits1 + bits2 + bits3 + bits4 + bits5) + 1;
 }
