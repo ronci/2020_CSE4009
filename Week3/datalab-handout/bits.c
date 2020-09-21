@@ -199,7 +199,7 @@ int tmin(void) {
  *   Rating: 1
  */
 int isTmax(int x) {
-	return !~(x ^ (x + 1));
+	return !(~(x ^ (x + 1)) | !(~x));   
 }
 /* 
  * allOddBits - return 1 if all odd-numbered bits in word set to 1
@@ -277,7 +277,7 @@ int isLessOrEqual(int x, int y) {
  *   Rating: 4 
  */
 int logicalNeg(int x) {
-  return 2;
+  return ((x ^ (~x + 1)) >> 31) & 1 ^ 1;
 }
 /* howManyBits - return the minimum number of bits required to represent x in
  *             two's complement
@@ -292,7 +292,30 @@ int logicalNeg(int x) {
  *  Rating: 4
  */
 int howManyBits(int x) {
-  return 0;
+	int check1 = (x << 16) >> 16;
+	int bits1 = !(check1 ^ x) << 4;
+
+	x = x << bits1;
+
+	int check2 = (x << 8) >> 8;
+	int bits2 = !(check1 ^ x) << 3;
+
+	x = x << bits2;
+
+	int check3 = (x << 4) >> 4;
+	int bits3 = !(check1 ^ x) << 2;
+
+	x = x << bits3;
+
+	int check4 = (x << 2) >> 2;
+	int bits4 = !(check1 ^ x) << 1;
+
+	x = x << bits4;
+
+	int check5 = (x << 1) >> 1;
+	int bits5 = !(check1 ^ x);
+
+	return 32 + ~(bits1 + bits2 + bits3 + bits4 + bits5) + 1;
 }
 //float
 /* 
