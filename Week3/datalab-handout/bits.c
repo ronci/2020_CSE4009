@@ -336,7 +336,7 @@ int floatFloat2Int(unsigned uf) {
 	int check_exp = 0xFF;
 	int s = uf >> 31;
 	int exp = (uf >> 23) & check_exp;
-	int frac = uf & ((1 << 23) - 1) | (1 << 23);
+	int frac = (uf & ((1 << 23) - 1)) | (1 << 23);
 	int E = exp - 127;
 	if (exp == check_exp || E > 31) {
 		return 0x80000000u;
