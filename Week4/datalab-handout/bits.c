@@ -179,7 +179,10 @@ NOTES:
  *   Rating: 3 
  */
 int logicalShift(int x, int n) {
-  return 2;
+	int mask = ~(1<<31);
+	int check1 = (!n)<<31>>31;
+	int check2 = (!!n)<<31>>31;
+	return (check1 & x) | (check2 & (((x>>1) & mask) >> (n+(~1+1))));
 }
 /* 
  * remainderPower2 - Compute x%(2^n), for 0 <= n <= 30
@@ -190,7 +193,12 @@ int logicalShift(int x, int n) {
  *   Rating: 3
  */
 int remainderPower2(int x, int n) {
-    return 2;
+	int mask1 = 1<<31;
+	int signed_bit = x & mask1;
+	int mask2 = signed_bit >> 31;
+	int mask3 = ~(mask1 >> (32 + ~n));
+	x = (((~x+1) & mask2) | (x & ~mask2)) & mask3;
+	return ((~x+1) & mask2) | (x & ~mask2);
 }
 /* 
  * specialBits - return bit pattern 0xffca3fff
@@ -199,7 +207,7 @@ int remainderPower2(int x, int n) {
  *   Rating: 1
  */
 int specialBits(void) {
-    return 2;
+	return ~(0xD7 << 14);
 }
 /* 
  * floatAbsVal - Return bit-level equivalent of absolute value of f for
@@ -213,7 +221,13 @@ int specialBits(void) {
  *   Rating: 2
  */
 unsigned floatAbsVal(unsigned uf) {
-  return 2;
+	int check_exp = 0xFF;
+	int exp = (uf >> 23) & check_exp;
+	int mask1 = ~(1<<31);
+	if(exp == check_exp && (uf << 9) != 0) {
+		return uf;
+	}
+	return uf & mask1;
 }
 /* 
  * floatScale4 - Return bit-level equivalent of expression 4*f for
@@ -227,7 +241,35 @@ unsigned floatAbsVal(unsigned uf) {
  *   Rating: 4
  */
 unsigned floatScale4(unsigned uf) {
-    return 2;
+	int y;
+	int plus_m = 1 << 24;
+	int signed_bit = 1 << 31;
+	int check_exp = 0xFF;
+	int exp = (uf >> 23) & check_exp;
+	int frac = uf << 9;
+	int uf_signed = uf & signed_bit;
+	if(exp == check_exp && frac != 0) {
+		return uf;
+	}
+	if(exp == 0) {
+		if(frac == 0) {
+			return uf;
+		}
+		if((uf & ((1 << 22) + (1 << 21)))) {
+			y = ((uf << 1) & ~((signed_bit >> 8) ^ signed_bit)) + plus_m;
+		}	
+		else {
+			y = uf << 2;
+		}
+		if(uf_signed != (y & signed_bit)) {
+			y += signed_bit;
+		}
+		return y;
+	}
+	if(exp > (check_exp - 4)) {
+		return (0xFF << 23) + uf_signed;
+	}
+	return uf + plus_m;
 }
 /* 
  * floatNegate - Return bit-level equivalent of expression -f for
@@ -241,7 +283,13 @@ unsigned floatScale4(unsigned uf) {
  *   Rating: 2
  */
 unsigned floatNegate(unsigned uf) {
- return 2;
+	int signed_bit = 1 << 31;
+	int check_exp = 0xFF;
+	int exp = (uf >> 23) & check_exp;
+	if(exp == check_exp && (uf << 9) != 0) {
+		return uf;
+	}
+	return uf + signed_bit;
 }
 /*
  * satMul2 - multiplies by 2, saturating to Tmin or Tmax if overflow
@@ -253,7 +301,12 @@ unsigned floatNegate(unsigned uf) {
  *   Rating: 3
  */
 int satMul2(int x) {
-  return 2;
+	int T = 1<<31;
+	int first_bit = ((x & T) >> 31) & 1;
+	int second_bit = ((x & (1<<30)) >> 30) & 1;
+	int check =  ((first_bit ^ second_bit) & 1) << 31 >> 31;
+	T = ((T >> 31) ^ T) + first_bit;
+	return (check & T) | (~check & (x<<1));
 }
 /* 
  * thirdBits - return word with every third bit (starting from the LSB) set to 1
@@ -262,7 +315,9 @@ int satMul2(int x) {
  *   Rating: 1
  */
 int thirdBits(void) {
-  return 2;
+	int x = 0x49;
+	x = (x << 9) + x + ~1 + 1;
+	return  (x << 15) + x + 1; 
 }
 /* 
  * signMag2TwosComp - Convert from sign-magnitude to two's complement
@@ -273,5 +328,9 @@ int thirdBits(void) {
  *   Rating: 4
  */
 int signMag2TwosComp(int x) {
-  return 2;
+	int mask = 1 << 31;
+	int signed_bit = x & mask;
+	int check = signed_bit >> 31;
+	x = x + signed_bit;
+	return (~check & x) | (check & (~x+1));
 }
