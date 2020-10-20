@@ -1,7 +1,7 @@
-phase1_answer
-phase2_answer
-phase3_answer
-phase4_answer
-phase5_answer
-phase6_answer
+I was trying to give Tina Fey more material.
+0 1 1 2 3 5
+0 949
+40 2
+5 115
+4 5 6 1 2 3
 secret_phase_answer (optional)
