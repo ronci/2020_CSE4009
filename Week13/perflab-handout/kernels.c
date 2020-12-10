@@ -66,20 +66,20 @@ void rotate3(int dim, pixel *src, pixel *dst)
 char rotate_descr4[] = "rotate4: Current working version";
 void rotate4(int dim, pixel *src, pixel *dst) 
 {
-    int i, j;
-    int bi, bj;
+    int i, j, k;
     int ldim = dim - 1;
     for(i = ldim; i >= 1; i--) {
         if(dim % i == 0) break;
     }
     int b = i;
     int n = dim / b;
+    int idx;
     for(i = 0; i < n; i++) {
-        for(j = 0; j < n; j++) {
-            for(bi = 0; bi < b; bi++) {
-                for(bj = 0; bj < b; bj++) {
-                    dst[RIDX(dim - 1 - RIDX(i, bi, b), RIDX(j, bj, b), dim)] = src[RIDX(RIDX(j, bj, b), RIDX(i, bi, b), dim)];
-                }
+        for(j = 0; j < dim; j++) {
+            idx = i * b;
+            for(k = 0; k < b; k++) {
+                dst[RIDX(dim - 1 - j, idx, dim)] = src[RIDX(idx, j, dim)];
+                idx++;
             }
         }
     }
@@ -114,20 +114,20 @@ void rotate2(int dim, pixel *src, pixel *dst)
 char rotate_descr[] = "rotate: Current working version";
 void rotate(int dim, pixel *src, pixel *dst) 
 {
-    int i, j, k;
+    int i, j;
+    int bi, bj;
     int ldim = dim - 1;
     for(i = ldim; i >= 1; i--) {
         if(dim % i == 0) break;
     }
     int b = i;
     int n = dim / b;
-    int idx;
     for(i = 0; i < n; i++) {
-        for(j = 0; j < dim; j++) {
-            idx = i * b;
-            for(k = 0; k < b; k++) {
-                dst[RIDX(dim - 1 - j, idx, dim)] = src[RIDX(idx, j, dim)];
-                idx++;
+        for(j = 0; j < n; j++) {
+            for(bi = 0; bi < b; bi++) {
+                for(bj = 0; bj < b; bj++) {
+                    dst[RIDX(dim - 1 - RIDX(i, bi, b), RIDX(j, bj, b), dim)] = src[RIDX(RIDX(j, bj, b), RIDX(i, bi, b), dim)];
+                }
             }
         }
     }
