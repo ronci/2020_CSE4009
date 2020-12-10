@@ -311,14 +311,18 @@ void smooth4(int dim, pixel *src, pixel *dst)
 {
     int i, j, k;
     int ldim = dim - 1;
-    int a;
-    int b = 32;
+    for(i = ldim; i >= 1; i--) {
+        if(dim % i == 0) break;
+    }
+    int b = i;
     int n = dim / b;
+    int idx;
     for(i = 0; i < n; i++) {
         for(j = 0; j < dim; j++) {
-            a = (dim - i * b) % b;
-            for(k = 0; k < a; k++) {
-                dst[RIDX(j, RIDX(i, k, b), dim)] = avg(dim, j, RIDX(i, k, b), src);
+            idx = i * b;
+            for(k = 0; k < b; k++) {
+                dst[RIDX(j, idx, dim)] = avg(dim, j, idx, src);
+                idx++;
             }
         }
     }
