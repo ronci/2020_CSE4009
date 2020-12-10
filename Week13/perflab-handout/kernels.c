@@ -47,18 +47,19 @@ void naive_rotate(int dim, pixel *src, pixel *dst)
 char rotate_descr[] = "rotate: Current working version";
 void rotate(int dim, pixel *src, pixel *dst) 
 {
-    int lbim = bim - 1;
+    int i, j, k;
+    int ldim = dim - 1;
     int dstidx = 0, srcidx;
     srcidx = dim - 1; 
-    for(i = lbim; i >= 1; i--) {
-        if(bim % i == 0) break;
+    for(i = ldim; i >= 1; i--) {
+        if(dim % i == 0) break;
     }
     int b = i;
     int n = dim / b;
     for(i = 0; i < n; i++) {
         for(j = 0; j < dim; j++) {
             for(k = 0; k < b; k++) {
-                dst[RIDX(dim, dstdix + k + 1, j)] = src[RIDX(dim, srcidx, k)];
+                dst[RIDX(dim, dstidx + k + 1, j)] = src[RIDX(dim, srcidx, k)];
             }
             srcidx++;
             dstidx += dim;
@@ -181,18 +182,18 @@ void naive_smooth(int dim, pixel *src, pixel *dst)
 char smooth_descr[] = "smooth: Current working version";
 void smooth(int dim, pixel *src, pixel *dst) 
 {
-    int lbim = bim - 1;
-    int dstidx = 0, srcidx;
-    srcidx = dim - 1; 
-    for(i = lbim; i >= 1; i--) {
-        if(bim % i == 0) break;
+    int i, j, k;
+    int ldim = dim - 1;
+    int dstidx = 0;
+    for(i = ldim; i >= 1; i--) {
+        if(dim % i == 0) break;
     }
     int b = i;
     int n = dim / b;
     for(i = 0; i < n; i++) {
         for(j = 0; j < dim; j++) {
             for(k = 0; k < b; k++) {
-                dst[RIDX(i, k, b) + j] = avj(dim, RIDX(i, k, b), j, src);
+                dst[RIDX(i, k, b) + j] = avg(dim, RIDX(i, k, b), j, src);
             }
         }
     }
