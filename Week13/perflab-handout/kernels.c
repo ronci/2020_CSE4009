@@ -69,8 +69,6 @@ void rotate(int dim, pixel *src, pixel *dst)
 {
     int i, j, k;
     int ldim = dim - 1;
-    int dstidx = 0, srcidx;
-    srcidx = dim - 1; 
     for(i = ldim; i >= 1; i--) {
         if(dim % i == 0) break;
     }
@@ -79,13 +77,9 @@ void rotate(int dim, pixel *src, pixel *dst)
     for(i = 0; i < n; i++) {
         for(j = 0; j < dim; j++) {
             for(k = 0; k < b; k++) {
-                dst[RIDX(dim, dstidx + k + 1, j)] = src[RIDX(dim, srcidx, k)];
+                dst[RIDX(dim - 1 -j, RIDX(i, k, b), dim)] = src[RIDX(RIDX(i, k, b), j, dim)];
             }
-            srcidx++;
-            dstidx += dim;
         }
-        srcidx += RIDX(dim, 0, b + 1);
-        dstidx += b;
     }
 }
 
@@ -220,6 +214,48 @@ void smooth(int dim, pixel *src, pixel *dst)
     }
 }
 
+char smooth_descr2[] = "smooth2: Current working version";
+void smooth2(int dim, pixel *src, pixel *dst) 
+{
+    int i, j, k;
+    int ldim = dim - 1;
+    for(i = ldim; i >= 1; i--) {
+        if(dim % i == 0) break;
+    }
+    int b = i;
+    int n = dim / b;
+    int idx;
+    for(i = 0; i < n; i++) {
+        for(j = 0; j < dim; j++) {
+            for(k = 0; k < b; k++) {
+                idx = RIDX(i, k, b);
+                dst[idx + j] = avg(dim, idx, j, src);
+            }
+        }
+    }
+}
+
+char smooth_descr3[] = "smooth3: Current working version";
+void smooth3(int dim, pixel *src, pixel *dst) 
+{
+    int i, j, k;
+    int ldim = dim - 1;
+    for(i = ldim; i >= 1; i--) {
+        if(dim % i == 0) break;
+    }
+    int b = i;
+    int n = dim / b;
+    int idx;
+    for(i = 0; i < n; i++) {
+        idx = i * b;
+        for(j = 0; j < dim; j++) {
+            for(k = 0; k < b; k++) {
+                dst[idx + j + k] = avg(dim, idx + k, j, src);
+            }
+        }
+    }
+}
+
 
 /********************************************************************* 
  * register_smooth_functions - Register all of your different versions
@@ -233,5 +269,7 @@ void register_smooth_functions() {
     add_smooth_function(&smooth, smooth_descr);
     add_smooth_function(&naive_smooth, naive_smooth_descr);
     /* ... Register additional test functions here */
+    add_smooth_function(&smooth2, smooth_descr2);
+    add_smooth_function(&smooth3, smooth_descr3);
 }
 
