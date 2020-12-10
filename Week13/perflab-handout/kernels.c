@@ -62,6 +62,27 @@ void rotate2(int dim, pixel *src, pixel *dst)
     }
 }
 
+char rotate_descr3[] = "rotate3: Current working version";
+void rotate3(int dim, pixel *src, pixel *dst) 
+{
+    int i, j, k;
+    int idx;
+    int ldim = dim - 1;
+    for(i = ldim; i >= 1; i--) {
+        if(dim % i == 0) break;
+    }
+    int b = i;
+    int n = dim / b;
+    for(i = 0; i < n; i++) {
+        for(j = 0; j < dim; j++) {
+            for(k = 0; k < b; k++) {
+                idx = RIDX(i, k, b);
+                dst[RIDX(dim - 1 - idx, j, dim)] = src[RIDX(j, idx, dim)];
+            }
+        }
+    }
+}
+
 /* 
  * rotate - Your current working version of rotate
  * IMPORTANT: This is the version you will be graded on
@@ -100,6 +121,7 @@ void register_rotate_functions()
     /* ... Register additional test functions here */
     
     add_rotate_function(&rotate2, rotate_descr2);   
+    add_rotate_function(&rotate3, rotate_descr3);   
 }
 
 
@@ -274,6 +296,25 @@ void smooth4(int dim, pixel *src, pixel *dst)
     }
 }
 
+char smooth_descr5[] = "smooth5: Current working version";
+void smooth5(int dim, pixel *src, pixel *dst) 
+{
+    int i, j, k;
+    int ldim = dim - 1;
+    for(i = ldim; i >= 1; i--) {
+        if(dim % i == 0) break;
+    }
+    int b = i;
+    int n = dim / b;
+    for(i = 0; i < n; i++) {
+        for(j = 0; j < dim; j++) {
+            for(k = 0; k < b; k++) {
+                dst[RIDX(j, RIDX(k, i, n), dim)] = avg(dim, j, RIDX(k, i, n), src);
+            }
+        }
+    }
+}
+
 /********************************************************************* 
  * register_smooth_functions - Register all of your different versions
  *     of the smooth kernel with the driver by calling the
@@ -289,5 +330,6 @@ void register_smooth_functions() {
     add_smooth_function(&smooth2, smooth_descr2);
     add_smooth_function(&smooth3, smooth_descr3);
     add_smooth_function(&smooth4, smooth_descr4);
+    add_smooth_function(&smooth5, smooth_descr5);
 }
 
