@@ -98,10 +98,9 @@ void rotate2(int dim, pixel *src, pixel *dst)
     int idx;
     for(i = 0; i < n; i++) {
         for(j = 0; j < dim; j++) {
-            idx = i * b;
             for(k = 0; k < b; k++) {
+                idx = RIDX(i, k, b);
                 dst[RIDX(dim - 1 - j, idx, dim)] = src[RIDX(idx, j, dim)];
-                idx++;
             }
         }
     }
@@ -111,6 +110,7 @@ void rotate2(int dim, pixel *src, pixel *dst)
  * rotate - Your current working version of rotate
  * IMPORTANT: This is the version you will be graded on
  */
+
 char rotate_descr[] = "rotate: Current working version";
 void rotate(int dim, pixel *src, pixel *dst) 
 {
@@ -124,9 +124,10 @@ void rotate(int dim, pixel *src, pixel *dst)
     int idx;
     for(i = 0; i < n; i++) {
         for(j = 0; j < dim; j++) {
+            idx = i * b;
             for(k = 0; k < b; k++) {
-                idx = RIDX(i, k, b);
                 dst[RIDX(dim - 1 - j, idx, dim)] = src[RIDX(idx, j, dim)];
+                idx++;
             }
         }
     }
@@ -259,6 +260,25 @@ void smooth(int dim, pixel *src, pixel *dst)
     for(i = 0; i < n; i++) {
         for(j = 0; j < dim; j++) {
             for(k = 0; k < b; k++) {
+                dst[RIDX(j, RIDX(k, i, n), dim)] = avg(dim, j, RIDX(k, i, n), src);
+            }
+        }
+    }
+}
+
+char smooth_descr3[] = "smooth3: Current working version";
+void smooth3(int dim, pixel *src, pixel *dst) 
+{
+    int i, j, k;
+    int ldim = dim - 1;
+    for(i = ldim; i >= 1; i--) {
+        if(dim % i == 0) break;
+    }
+    int b = i;
+    int n = dim / b;
+    for(i = 0; i < n; i++) {
+        for(j = 0; j < dim; j++) {
+            for(k = 0; k < b; k++) {
                 dst[RIDX(j, RIDX(i, k, b), dim)] = avg(dim, j, RIDX(i, k, b), src);
             }
         }
@@ -285,26 +305,6 @@ void smooth2(int dim, pixel *src, pixel *dst)
         }
     }
 }
-
-char smooth_descr3[] = "smooth3: Current working version";
-void smooth3(int dim, pixel *src, pixel *dst) 
-{
-    int i, j, k;
-    int ldim = dim - 1;
-    for(i = ldim; i >= 1; i--) {
-        if(dim % i == 0) break;
-    }
-    int b = i;
-    int n = dim / b;
-    for(i = 0; i < n; i++) {
-        for(j = 0; j < dim; j++) {
-            for(k = 0; k < b; k++) {
-                dst[RIDX(j, RIDX(k, i, n), dim)] = avg(dim, j, RIDX(k, i, n), src);
-            }
-        }
-    }
-}
-
 
 char smooth_descr4[] = "smooth4: Current working version";
 void smooth4(int dim, pixel *src, pixel *dst) 
