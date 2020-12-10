@@ -230,8 +230,7 @@ void smooth2(int dim, pixel *src, pixel *dst)
     for(i = 0; i < n; i++) {
         for(j = 0; j < dim; j++) {
             for(k = 0; k < b; k++) {
-                idx = RIDX(i, k, b);
-                dst[idx * dim + j] = avg(dim, idx, j, src);
+                dst[RIDX(RIDX(k, i, n), j, dim)] = avg(dim, RIDX(k, i, n), j, src);
             }
         }
     }
@@ -247,18 +246,33 @@ void smooth3(int dim, pixel *src, pixel *dst)
     }
     int b = i;
     int n = dim / b;
-    int idx;
     for(i = 0; i < n; i++) {
-        idx = i * b;
         for(j = 0; j < dim; j++) {
             for(k = 0; k < b; k++) {
-                dst[idx * dim + j] = avg(dim, idx, j, src);
-                idx++;
+                dst[RIDX(RIDX(i, k, b), j, dim)] = avg(dim, RIDX(i, k, b), j, src);
             }
         }
     }
 }
 
+char smooth_descr4[] = "smooth4: Current working version";
+void smooth4(int dim, pixel *src, pixel *dst) 
+{
+    int i, j, k;
+    int ldim = dim - 1;
+    for(i = ldim; i >= 1; i--) {
+        if(dim % i == 0) break;
+    }
+    int b = i;
+    int n = dim / b;
+    for(i = 0; i < n; i++) {
+        for(j = 0; j < dim; j++) {
+            for(k = 0; k < b; k++) {
+                dst[RIDX(j, RIDX(i, k, b), dim)] = avg(dim, j, RIDX(i, k, b), src);
+            }
+        }
+    }
+}
 
 /********************************************************************* 
  * register_smooth_functions - Register all of your different versions
@@ -269,10 +283,11 @@ void smooth3(int dim, pixel *src, pixel *dst)
  *********************************************************************/
 
 void register_smooth_functions() {
-    add_smooth_function(&smooth, smooth_descr);
     add_smooth_function(&naive_smooth, naive_smooth_descr);
+    add_smooth_function(&smooth, smooth_descr);
     /* ... Register additional test functions here */
     add_smooth_function(&smooth2, smooth_descr2);
     add_smooth_function(&smooth3, smooth_descr3);
+    add_smooth_function(&smooth4, smooth_descr4);
 }
 
