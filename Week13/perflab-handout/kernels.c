@@ -210,7 +210,7 @@ void smooth(int dim, pixel *src, pixel *dst)
     for(i = 0; i < n; i++) {
         for(j = 0; j < dim; j++) {
             for(k = 0; k < b; k++) {
-                dst[RIDX(i, k, b) * dim + j] = avg(dim, RIDX(i, k, b) * dim, j, src);
+                dst[RIDX(RIDX(i, k, b), j, dim)] = avg(dim, RIDX(i, k, b) * dim, j, src);
             }
         }
     }
@@ -230,8 +230,8 @@ void smooth2(int dim, pixel *src, pixel *dst)
     for(i = 0; i < n; i++) {
         for(j = 0; j < dim; j++) {
             for(k = 0; k < b; k++) {
-                idx = RIDX(i, k, b) * dim;
-                dst[idx + j] = avg(dim, idx, j, src);
+                idx = RIDX(i, k, b);
+                dst[idx * dim + j] = avg(dim, idx, j, src);
             }
         }
     }
@@ -249,11 +249,11 @@ void smooth3(int dim, pixel *src, pixel *dst)
     int n = dim / b;
     int idx;
     for(i = 0; i < n; i++) {
-        idx = i * b * dim;
+        idx = i * b;
         for(j = 0; j < dim; j++) {
             for(k = 0; k < b; k++) {
-                dst[idx + j] = avg(dim, idx, j, src);
-                idx += dim;
+                dst[idx * dim + j] = avg(dim, idx, j, src);
+                idx++;
             }
         }
     }
