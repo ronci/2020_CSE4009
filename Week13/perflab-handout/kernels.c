@@ -40,6 +40,26 @@ void naive_rotate(int dim, pixel *src, pixel *dst)
 	    dst[RIDX(dim-1-j, i, dim)] = src[RIDX(i, j, dim)];
 }
 
+
+char rotate_descr2[] = "rotate2: Current working version";
+void rotate2(int dim, pixel *src, pixel *dst) 
+{
+     int i, j, k;
+    int ldim = dim - 1;
+    for(i = ldim; i >= 1; i--) {
+        if(dim % i == 0) break;
+    }
+    int b = i;
+    int n = dim / b;
+    for(i = 0; i < n; i++) {
+        for(j = 0; j < dim; j++) {
+            for(k = 0; k < b; k++) {
+                dst[RIDX(dim - 1 -j, RIDX(i, k, b), dim)] = src[RIDX(RIDX(i, k, b), j, dim)];
+            }
+        }
+    }
+}
+
 /* 
  * rotate - Your current working version of rotate
  * IMPORTANT: This is the version you will be graded on
@@ -82,6 +102,8 @@ void register_rotate_functions()
     add_rotate_function(&naive_rotate, naive_rotate_descr);   
     add_rotate_function(&rotate, rotate_descr);   
     /* ... Register additional test functions here */
+    
+    add_rotate_function(&rotate2, rotate_descr2);   
 }
 
 
@@ -184,7 +206,6 @@ void smooth(int dim, pixel *src, pixel *dst)
 {
     int i, j, k;
     int ldim = dim - 1;
-    int dstidx = 0;
     for(i = ldim; i >= 1; i--) {
         if(dim % i == 0) break;
     }
