@@ -44,7 +44,8 @@ void naive_rotate(int dim, pixel *src, pixel *dst)
 char rotate_descr3[] = "rotate3: Current working version";
 void rotate3(int dim, pixel *src, pixel *dst) 
 {
-     int i, j, k;
+    int i, j;
+    int bi, bj;
     int ldim = dim - 1;
     for(i = ldim; i >= 1; i--) {
         if(dim % i == 0) break;
@@ -54,8 +55,8 @@ void rotate3(int dim, pixel *src, pixel *dst)
     for(i = 0; i < n; i++) {
         for(j = 0; j < n; j++) {
             for(bi = 0; bi < b; bi++) {
-                for(bj = 0; bj < bj++) {
-                    dst[RIDX(dim - 1 - RIDX(j, bj, b), RIDX(i, bi, b), dim)] = avg(dim, RIDX(i, bi, b), RIDX(j, bj, b), src);
+                for(bj = 0; bj < b; bj++) {
+                    dst[RIDX(dim - 1 - RIDX(j, bj, b), RIDX(i, bi, b), dim)] = src[RIDX(RIDX(i, bi, b), RIDX(j, bj, b), dim)];
                 }
             }
         }
@@ -65,7 +66,8 @@ void rotate3(int dim, pixel *src, pixel *dst)
 char rotate_descr4[] = "rotate4: Current working version";
 void rotate4(int dim, pixel *src, pixel *dst) 
 {
-     int i, j, k;
+    int i, j;
+    int bi, bj;
     int ldim = dim - 1;
     for(i = ldim; i >= 1; i--) {
         if(dim % i == 0) break;
@@ -75,8 +77,8 @@ void rotate4(int dim, pixel *src, pixel *dst)
     for(i = 0; i < n; i++) {
         for(j = 0; j < n; j++) {
             for(bi = 0; bi < b; bi++) {
-                for(bj = 0; bj < bj++) {
-                    dst[RIDX(dim - 1 - RIDX(i, bi, b), RIDX(j, bj, b), dim)] = avg(dim, RIDX(j, bj, b), RIDX(i, bi, b), src);
+                for(bj = 0; bj < b; bj++) {
+                    dst[RIDX(dim - 1 - RIDX(i, bi, b), RIDX(j, bj, b), dim)] = src[RIDX(RIDX(j, bj, b), RIDX(i, bi, b), dim)];
                 }
             }
         }
@@ -306,7 +308,7 @@ void smooth3(int dim, pixel *src, pixel *dst)
 char smooth_descr4[] = "smooth4: Current working version";
 void smooth4(int dim, pixel *src, pixel *dst) 
 {
-    int i, j, k;
+    int i, j;
     int bi, bj;
     int ldim = dim - 1;
     for(i = ldim; i >= 1; i--) {
@@ -317,7 +319,7 @@ void smooth4(int dim, pixel *src, pixel *dst)
     for(i = 0; i < n; i++) {
         for(j = 0; j < n; j++) {
             for(bi = 0; bi < b; bi++) {
-                for(bj = 0; bj < bj++) {
+                for(bj = 0; bj < b; bj++) {
                     dst[RIDX(RIDX(i, bi, b), RIDX(j, bj, b), dim)] = avg(dim, RIDX(i, bi, b), RIDX(j, bj, b), src);
                 }
             }
@@ -328,7 +330,7 @@ void smooth4(int dim, pixel *src, pixel *dst)
 char smooth_descr5[] = "smooth5: Current working version";
 void smooth5(int dim, pixel *src, pixel *dst) 
 {
-    int i, j, k;
+    int i, j;
     int bi, bj;
     int ldim = dim - 1;
     for(i = ldim; i >= 1; i--) {
@@ -339,7 +341,7 @@ void smooth5(int dim, pixel *src, pixel *dst)
     for(i = 0; i < n; i++) {
         for(j = 0; j < n; j++) {
             for(bi = 0; bi < b; bi++) {
-                for(bj = 0; bj < bj++) {
+                for(bj = 0; bj < b; bj++) {
                     dst[RIDX(RIDX(j, bj, b), RIDX(i, bi, b), dim)] = avg(dim, RIDX(j, bj, b), RIDX(i, bi, b), src);
                 }
             }
