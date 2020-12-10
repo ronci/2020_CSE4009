@@ -210,7 +210,7 @@ void smooth(int dim, pixel *src, pixel *dst)
     for(i = 0; i < n; i++) {
         for(j = 0; j < dim; j++) {
             for(k = 0; k < b; k++) {
-                dst[RIDX(RIDX(i, k, b), j, dim)] = avg(dim, RIDX(i, k, b) * dim, j, src);
+                dst[RIDX(RIDX(i, k, b), j, dim)] = avg(dim, RIDX(i, k, b), j, src);
             }
         }
     }
